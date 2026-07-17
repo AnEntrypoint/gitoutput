@@ -32,3 +32,4 @@ digest.txt
 
 # Local agent tooling state (gm-plugkit)
 .gm/
+.gm/pw-sock-*/
