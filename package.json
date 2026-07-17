@@ -1,0 +1,41 @@
+{
+  "name": "gitingest",
+  "version": "0.4.0",
+  "description": "CLI tool to turn a Git repository or local directory into a single text digest for LLMs",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "gitingest": "src/cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "keywords": [
+    "git",
+    "llm",
+    "digest",
+    "cli",
+    "prompt"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnEntrypoint/gitingest.git"
+  },
+  "homepage": "https://github.com/AnEntrypoint/gitingest",
+  "bugs": {
+    "url": "https://github.com/AnEntrypoint/gitingest/issues"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "iconv-lite": "^0.7.3",
+    "ignore": "^7.0.6",
+    "js-tiktoken": "^1.0.21"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "eslint": "^9.30.1",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^16.3.0"
+  }
+}

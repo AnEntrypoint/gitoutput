@@ -8,27 +8,14 @@ Thumbs.db
 .idea/
 *.swp
 
-# Python virtual-envs & tooling
-.venv*/
-venv/
-.python-version
-__pycache__/
-*.egg-info/
-*.egg
-.ruff_cache/
-
-# Test artifacts & coverage
-.pytest_cache/
-.coverage
-coverage.xml
-htmlcov/
+# Node / JS tooling
+node_modules/
+npm-debug.log*
+.npm/
 
 # Build, distribution & docs
 build/
 dist/
-*.wheel
-
-
 
 # Logs & runtime output
 *.log
@@ -42,3 +29,6 @@ digest.txt
 
 # Environment variables
 .env
+
+# Local agent tooling state (gm-plugkit)
+.gm/
