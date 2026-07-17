@@ -51,7 +51,12 @@ npx gitoutput https://github.com/username/private-repo
 
 ## Filtering what's included
 
-By default, everything not matched by `.gitignore`/`.gitingestignore` or gitoutput's own built-in ignore list (build artifacts, binaries, lockfiles, secrets, caches, etc.) is included — the goal is a digest with exactly what an agent needs to plan changes, nothing more.
+By default, everything not matched by `.gitignore`/`.gitingestignore` or gitoutput's own built-in ignore list is included — the goal is a digest with exactly what an agent needs to plan changes, nothing more. The built-in list unconditionally excludes:
+
+- **All hidden files and directories** (anything starting with `.` — `.github/`, `.eslintrc`, `.env.example`, editor/IDE config, AI-agent tooling state, VCS internals, etc.)
+- **Build/output directories** that mirror or duplicate source (`build/`, `dist/`, `out/`, `output/`, `builds/`, `artifacts/`, `generated/`, `public/`, `static/`, etc.)
+- **Binaries and compiled artifacts** across every major language/platform (executables, object files, ML model weights, 3D/game-engine assets, archives, media, fonts, office documents)
+- **Lockfiles, caches, and secrets** (`node_modules`, `*.lock`, `*.key`/`*.pem`/`credentials.json`, etc.)
 
 ```bash
 npx gitoutput . --exclude-pattern "*.test.js"

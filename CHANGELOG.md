@@ -17,9 +17,17 @@
 ### Features
 
 * **ignore-patterns:** expand the built-in default ignore list with additional
-  binary/media/font/archive extensions, more package-manager caches and lockfiles,
-  security-sensitive file patterns (`*.key`, `*.pem`, `credentials.json`, etc.), and
-  crash-dump artifacts, so the digest stays focused on planning-relevant content.
-  Documentation, tests, and config files (`README*`, `tsconfig.json`, `Dockerfile`,
-  etc.) are deliberately still included by default, unlike some sibling code-search
-  tools that drop them for search-embedding noise reduction.
+  binary/media/font/archive/3D-asset/ML-model extensions, more package-manager
+  caches and lockfiles, security-sensitive file patterns (`*.key`, `*.pem`,
+  `credentials.json`, etc.), crash-dump artifacts, mobile/embedded build output,
+  and more build/output directory names, so the digest stays focused on
+  planning-relevant content. Documentation, tests, and non-dotfile config files
+  (`README*`, `tsconfig.json`, `Dockerfile`, etc.) are deliberately still included
+  by default, unlike some sibling code-search tools that drop them for
+  search-embedding noise reduction.
+* **ignore-patterns (breaking):** all hidden files and directories (anything
+  starting with `.`) are now unconditionally excluded from the digest --
+  `.github/workflows/`, `.eslintrc.js`, `.env.example`, and similar dotfiles no
+  longer appear by default. This is a hard rule independent of `--include-gitignored`
+  (that flag only affects `.gitignore`/`.gitingestignore` file content, not the
+  built-in default list).
