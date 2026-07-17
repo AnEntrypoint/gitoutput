@@ -1,6 +1,7 @@
 # Operating-system
 .DS_Store
 Thumbs.db
+*.stackdump
 
 # Editor / IDE settings
 .vscode/
