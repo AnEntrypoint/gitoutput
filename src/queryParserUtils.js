@@ -71,7 +71,7 @@ async function tryDomainsForUserAndRepo(userName, repoName, token) {
         const candidate = `https://${domain}/${userName}/${repoName}`;
         const useToken = domain.startsWith('github.') ? token : null;
 
-         
+
         if (await checkRepoExists(candidate, useToken)) {
             return domain;
         }

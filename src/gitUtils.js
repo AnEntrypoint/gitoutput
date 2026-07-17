@@ -51,7 +51,7 @@ export async function ensureGitInstalled() {
             const { stdout } = await execFileAsync('git', ['config', 'core.longpaths'], EXEC_OPTS);
 
             if (stdout.trim().toLowerCase() !== 'true') {
-                 
+
                 console.error(
                     'Warning: Git clone may fail on Windows due to long file paths. ' +
             "Consider enabling long path support with: 'git config --global core.longpaths true'. " +

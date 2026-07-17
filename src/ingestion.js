@@ -100,7 +100,7 @@ async function processNode(node, query, stats) {
             continue;
         }
 
-         
+
         const st = await stat(subPath).catch(() => null);
 
         if (st === null) {
@@ -121,7 +121,7 @@ async function processNode(node, query, stats) {
                 depth: node.depth + 1,
             });
 
-             
+
             await processNode(childDirectoryNode, query, stats);
 
             if (childDirectoryNode.children.length === 0) {

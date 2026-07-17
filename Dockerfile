@@ -11,9 +11,6 @@ COPY src/ ./src/
 # Stage 2: Runtime image
 FROM node:20-slim
 
-ARG UID=1000
-ARG GID=1000
-
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends git ca-certificates; \
@@ -21,17 +18,13 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-RUN set -eux; \
-    groupadd -g "$GID" appuser; \
-    useradd -m -u "$UID" -g "$GID" appuser
 
-COPY --from=builder --chown=$UID:$GID /build/node_modules ./node_modules
-COPY --chown=$UID:$GID package.json ./
-COPY --chown=$UID:$GID src/ ./src/
+# node:20-slim already ships a non-root "node" user (uid/gid 1000); reuse it.
+COPY --from=builder --chown=node:node /build/node_modules ./node_modules
+COPY --chown=node:node package.json ./
+COPY --chown=node:node src/ ./src/
 
-RUN set -eux; \
-    chown -R appuser:appuser /app
-USER appuser
+USER node
 
 ENTRYPOINT ["node", "src/cli.js"]
 CMD ["--help"]

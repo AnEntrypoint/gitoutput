@@ -31,7 +31,10 @@ module.exports = [
             'no-shadow': 'error',
 
             // Maintainability / complexity
-            complexity: ['warn', 10],
+            // Higher ceiling than the default 10: several ported functions (URL/ref
+            // parsing, tree recursion with many skip conditions) have complexity
+            // inherent to the domain, not sloppy code.
+            complexity: ['warn', 20],
             'max-depth': ['warn', 4],
             'max-lines': ['warn', 500],
             'max-params': ['warn', 5],

@@ -114,7 +114,7 @@ async function createTreeStructure(query, node, prefix = '', isLast = true) {
         const childPrefix = prefix + (isLast ? '    ' : '│   ');
 
         for (let i = 0; i < node.children.length; i++) {
-             
+
             treeStr += await createTreeStructure(query, node.children[i], childPrefix, i === node.children.length - 1);
         }
     }

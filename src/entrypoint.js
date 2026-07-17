@@ -123,7 +123,7 @@ function overrideBranchAndTag(query, branch, tag) {
 
 async function applyGitignores(query) {
     for (const fname of ['.gitignore', '.gitingestignore']) {
-     
+
         const patterns = await loadIgnorePatterns(query.localPath, fname);
 
         for (const p of patterns) {query.ignorePatterns.add(p);}
