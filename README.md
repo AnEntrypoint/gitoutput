@@ -3,93 +3,69 @@
 <!-- Badges -->
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-  <!-- row 1 — install & compat -->
   <a href="https://www.npmjs.com/package/gitingest"><img src="https://img.shields.io/npm/v/gitingest.svg" alt="npm"></a>
-  <a href="https://www.npmjs.com/package/gitingest"><img src="https://img.shields.io/node/v/gitingest.svg" alt="Node Versions"></a>
-  <br>
-  <!-- row 2 — quality & community -->
   <a href="https://github.com/AnEntrypoint/gitingest/actions/workflows/ci.yml?query=branch%3Amain"><img src="https://github.com/AnEntrypoint/gitingest/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="https://scorecard.dev/viewer/?uri=github.com/AnEntrypoint/gitingest"><img src="https://api.scorecard.dev/projects/github.com/AnEntrypoint/gitingest/badge" alt="OpenSSF Scorecard"></a>
-  <br>
   <a href="https://github.com/AnEntrypoint/gitingest/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AnEntrypoint/gitingest.svg" alt="License"></a>
-  <a href="https://www.npmjs.com/package/gitingest"><img src="https://img.shields.io/npm/dt/gitingest.svg" alt="Downloads"></a>
-  <a href="https://github.com/AnEntrypoint/gitingest"><img src="https://img.shields.io/github/stars/AnEntrypoint/gitingest" alt="GitHub Stars"></a>
 </p>
 <!-- markdownlint-enable MD033 -->
 
-Turn any Git repository into a prompt-friendly text ingest for LLMs -- directly from your terminal, in one shot.
+Turn any Git repository or local directory into a single, prompt-friendly text digest for LLMs — no install required, straight from `npx`.
 
-## 🚀 Features
-
-- **Easy code context**: Get a text digest from a Git repository URL or a directory
-- **One-shot stdout output**: Prints the digest straight to your terminal by default -- pipe it anywhere
-- **Smart Formatting**: Optimized output format for LLM prompts
-- **Statistics about**:
-  - File and directory structure
-  - Size of the extract
-  - Token count
-- **CLI tool**: Run it as a shell command
-- **Node.js package**: Import it in your code
-
-## 📚 Requirements
-
-- Node.js 18+
-- `git` installed and on your `PATH`
-- For private repositories: A GitHub Personal Access Token (PAT). [Generate your token **here**!](https://github.com/settings/tokens/new?description=gitingest&scopes=repo)
-
-### 📦 Installation
-
-Gitingest is available on [npm](https://www.npmjs.com/package/gitingest).
-
-```bash
-npm install -g gitingest
-```
-
-Or run it without a global install:
+## Quick start
 
 ```bash
 npx gitingest /path/to/directory
 ```
 
-## 💡 Command line usage
-
-The `gitingest` command line tool analyzes a codebase and prints a text digest of its contents directly to your terminal.
-
 ```bash
-# Basic usage -- prints the digest to stdout
-gitingest /path/to/directory
-
-# From URL
-gitingest https://github.com/AnEntrypoint/gitingest
-
-# or from specific subdirectory
-gitingest https://github.com/AnEntrypoint/gitingest/tree/main/src
-
-# Pipe it anywhere
-gitingest . | pbcopy
-gitingest . > digest.txt
+npx gitingest https://github.com/AnEntrypoint/gitingest
 ```
 
-For private repositories, use the `--token/-t` option.
+That's it — the digest (a summary, a file tree, and the content of every included file) prints straight to your terminal in one shot. `npx` fetches the latest published version each time, so there's nothing to install or keep up to date.
 
 ```bash
-# Get your token from https://github.com/settings/personal-access-tokens
-gitingest https://github.com/username/private-repo --token github_pat_...
+# Pipe it wherever you need it
+npx gitingest . | pbcopy
+npx gitingest . > digest.txt
 
-# Or set it as an environment variable
+# Point it at a subdirectory or branch
+npx gitingest https://github.com/AnEntrypoint/gitingest/tree/main/src
+npx gitingest . --branch develop
+```
+
+## Requirements
+
+- Node.js 18+ (ships with `npx`)
+- `git` installed and on your `PATH`
+- For private repositories: a GitHub Personal Access Token (PAT). [Generate one here](https://github.com/settings/tokens/new?description=gitingest&scopes=repo).
+
+## Private repositories
+
+```bash
+npx gitingest https://github.com/username/private-repo --token github_pat_...
+
+# or via environment variable
 export GITHUB_TOKEN=github_pat_...
-gitingest https://github.com/username/private-repo
-
-# Include repository submodules
-gitingest https://github.com/username/repo-with-submodules --include-submodules
+npx gitingest https://github.com/username/private-repo
 ```
 
-By default, files listed in `.gitignore` and `.gitingestignore` are skipped. Use `--include-gitignored` if you
-need those files in the digest.
+## Filtering what's included
 
-By default, the digest is printed to `STDOUT`. Use `--output/-o <filename>` to write it to a file instead.
+By default, everything not matched by `.gitignore`/`.gitingestignore` or gitingest's own built-in ignore list (build artifacts, binaries, lockfiles, secrets, caches, etc.) is included — the goal is a digest with exactly what an agent needs to plan changes, nothing more.
 
-### Options
+```bash
+npx gitingest . --exclude-pattern "*.test.js"
+npx gitingest . --include-pattern "src/**"
+npx gitingest . --include-gitignored   # also include .gitignore'd files
+```
+
+## Writing to a file instead of stdout
+
+```bash
+npx gitingest . --output digest.txt
+```
+
+## All options
 
 | Flag                     | Short | Description                                                                 |
 | ------------------------ | ----- | ----------------------------------------------------------------------------|
@@ -102,13 +78,23 @@ By default, the digest is printed to `STDOUT`. Use `--output/-o <filename>` to w
 | `--token <token>`        | `-t`  | GitHub PAT for private repositories (falls back to `GITHUB_TOKEN` env var)  |
 | `--output <path>`        | `-o`  | Output file path. Defaults to `-` (stdout)                                  |
 
-See more options and usage details with:
-
 ```bash
-gitingest --help
+npx gitingest --help
 ```
 
-## 📦 Node.js package usage
+## Supported Git hosts
+
+Bare `user/repo` slugs and scheme-less URLs are resolved against known hosts: `github.com`, `gitlab.com`,
+`bitbucket.org`, `gitea.com`, `codeberg.org`, and `gist.github.com`. Self-hosted instances are also recognized
+heuristically when the hostname starts with `git.`, `gitlab.`, or `github.` (e.g. GitHub Enterprise).
+
+## Using it as a library
+
+If you're building a Node.js tool on top of gitingest rather than shelling out to the CLI:
+
+```bash
+npm install gitingest
+```
 
 ```js
 import { ingestAsync } from "gitingest";
@@ -118,59 +104,19 @@ const [summary, tree, content] = await ingestAsync("https://github.com/AnEntrypo
 console.log(summary);
 ```
 
-For private repositories, pass a token:
-
-```js
-// Using the token option
-const [summary, tree, content] = await ingestAsync("https://github.com/username/private-repo", {
-  token: "github_pat_...",
-});
-
-// Or set it as an environment variable
-process.env.GITHUB_TOKEN = "github_pat_...";
-const result = await ingestAsync("https://github.com/username/private-repo");
-
-// Include repository submodules
-const result2 = await ingestAsync("https://github.com/username/repo-with-submodules", {
-  includeSubmodules: true,
-});
-```
-
-By default, this won't write a file, but can be enabled with the `output` option (`"-"` for stdout, a path to write to a file).
-
-## Supported Git hosts
-
-Bare `user/repo` slugs and scheme-less URLs are resolved against known hosts: `github.com`, `gitlab.com`,
-`bitbucket.org`, `gitea.com`, `codeberg.org`, and `gist.github.com`. Self-hosted instances are also recognized
-heuristically when the hostname starts with `git.`, `gitlab.`, or `github.` (e.g. GitHub Enterprise).
-
-## 🐳 Docker
-
-Build and run the CLI in a container:
+## Docker
 
 ```bash
 docker build -t gitingest .
 docker run --rm gitingest https://github.com/AnEntrypoint/gitingest
 ```
 
-## 🤝 Contributing
+## Contributing
 
-### Non-technical ways to contribute
+Issues and pull requests welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-- **Create an Issue**: If you find a bug or have an idea for a new feature, please [create an issue](https://github.com/AnEntrypoint/gitingest/issues/new) on GitHub. This will help us track and prioritize your request.
-- **Spread the Word**: If you like Gitingest, please share it with your friends, colleagues, and on social media. This will help us grow the community and make Gitingest even better.
-- **Use Gitingest**: The best feedback comes from real-world usage! If you encounter any issues or have ideas for improvement, please let us know by [creating an issue](https://github.com/AnEntrypoint/gitingest/issues/new) on GitHub.
+## Stack
 
-### Technical ways to contribute
-
-Gitingest aims to be friendly for first time contributors, with a simple Node.js codebase. For detailed instructions on how to make a pull request, see [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## 🛠️ Stack
-
-- [commander](https://github.com/tj/commander.js) - CLI framework
-- [ignore](https://github.com/kaelzhang/node-ignore) - `.gitignore`-style pattern matching
-- [js-tiktoken](https://github.com/dqbd/tiktoken) - Token estimation
-
-## 🚀 Project Growth
-
-[![Star History Chart](https://api.star-history.com/svg?repos=AnEntrypoint/gitingest&type=Date)](https://star-history.com/#AnEntrypoint/gitingest&Date)
+- [commander](https://github.com/tj/commander.js) — CLI framework
+- [ignore](https://github.com/kaelzhang/node-ignore) — `.gitignore`-style pattern matching
+- [js-tiktoken](https://github.com/dqbd/tiktoken) — token estimation

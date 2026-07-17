@@ -1,9 +1,13 @@
 name: Publish to npm
 
 on:
-  release:
-    types: [created] # Run when you click "Publish release"
+  push:
+    branches: [main]
   workflow_dispatch: # ... or run it manually from the Actions tab
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -11,10 +15,11 @@ permissions:
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
-    environment: npm
+    if: "!contains(github.event.head_commit.message, '[skip npm]')"
 
     permissions:
-      id-token: write # OIDC token for provenance
+      contents: write # to commit the version bump back
+      id-token: write # OIDC provenance
 
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -23,6 +28,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -32,6 +39,23 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump patch version
+        run: npm version patch --no-git-tag-version
+
+      - name: Commit and tag version bump
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          git add package.json package-lock.json
+          git commit -m "chore(release): v${VERSION} [skip npm]"
+          git tag "v${VERSION}"
+          git push origin HEAD:main
+          git push origin "v${VERSION}"
 
       - name: Publish
         run: npm publish --provenance --access public
