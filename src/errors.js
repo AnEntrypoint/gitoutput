@@ -18,7 +18,7 @@ export class InvalidGitHubTokenError extends Error {
     constructor() {
         super(
             'Invalid GitHub token format. To generate a token, go to ' +
-        'https://github.com/settings/tokens/new?description=gitingest&scopes=repo.',
+        'https://github.com/settings/tokens/new?description=gitoutput&scopes=repo.',
         );
         this.name = 'InvalidGitHubTokenError';
     }

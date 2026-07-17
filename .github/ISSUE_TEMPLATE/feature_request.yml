@@ -1,12 +1,12 @@
 name: Feature request 💡
-description: Suggest a new feature or improvement for Gitingest
+description: Suggest a new feature or improvement for Gitoutput
 title: "(feat): "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to help us improve **Gitingest**! :sparkles:
+        Thanks for taking the time to help us improve **Gitoutput**! :sparkles:
 
         Please fill in the sections below to describe your idea. The more detail you provide, the easier it is for us to evaluate and plan the work. :point_down:
 
@@ -49,11 +49,9 @@ body:
       default: 0
       options:
         - "Select one..."
-        - Web UI
         - CLI
-        - PyPI package
-        - CLI + PyPI package
-        - All
+        - Node.js library
+        - CLI + library
     validations:
       required: true
 

@@ -1,9 +1,9 @@
-# Gitingest
+# Gitoutput
 
 <!-- Badges -->
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-  <a href="https://www.npmjs.com/package/gitingest"><img src="https://img.shields.io/npm/v/gitingest.svg" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/gitoutput"><img src="https://img.shields.io/npm/v/gitoutput.svg" alt="npm"></a>
   <a href="https://github.com/AnEntrypoint/gitingest/actions/workflows/ci.yml?query=branch%3Amain"><img src="https://github.com/AnEntrypoint/gitingest/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://github.com/AnEntrypoint/gitingest/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AnEntrypoint/gitingest.svg" alt="License"></a>
 </p>
@@ -14,55 +14,55 @@ Turn any Git repository or local directory into a single, prompt-friendly text d
 ## Quick start
 
 ```bash
-npx gitingest /path/to/directory
+npx gitoutput /path/to/directory
 ```
 
 ```bash
-npx gitingest https://github.com/AnEntrypoint/gitingest
+npx gitoutput https://github.com/AnEntrypoint/gitingest
 ```
 
 That's it — the digest (a summary, a file tree, and the content of every included file) prints straight to your terminal in one shot. `npx` fetches the latest published version each time, so there's nothing to install or keep up to date.
 
 ```bash
 # Pipe it wherever you need it
-npx gitingest . | pbcopy
-npx gitingest . > digest.txt
+npx gitoutput . | pbcopy
+npx gitoutput . > digest.txt
 
 # Point it at a subdirectory or branch
-npx gitingest https://github.com/AnEntrypoint/gitingest/tree/main/src
-npx gitingest . --branch develop
+npx gitoutput https://github.com/AnEntrypoint/gitingest/tree/main/src
+npx gitoutput . --branch develop
 ```
 
 ## Requirements
 
 - Node.js 18+ (ships with `npx`)
 - `git` installed and on your `PATH`
-- For private repositories: a GitHub Personal Access Token (PAT). [Generate one here](https://github.com/settings/tokens/new?description=gitingest&scopes=repo).
+- For private repositories: a GitHub Personal Access Token (PAT). [Generate one here](https://github.com/settings/tokens/new?description=gitoutput&scopes=repo).
 
 ## Private repositories
 
 ```bash
-npx gitingest https://github.com/username/private-repo --token github_pat_...
+npx gitoutput https://github.com/username/private-repo --token github_pat_...
 
 # or via environment variable
 export GITHUB_TOKEN=github_pat_...
-npx gitingest https://github.com/username/private-repo
+npx gitoutput https://github.com/username/private-repo
 ```
 
 ## Filtering what's included
 
-By default, everything not matched by `.gitignore`/`.gitingestignore` or gitingest's own built-in ignore list (build artifacts, binaries, lockfiles, secrets, caches, etc.) is included — the goal is a digest with exactly what an agent needs to plan changes, nothing more.
+By default, everything not matched by `.gitignore`/`.gitingestignore` or gitoutput's own built-in ignore list (build artifacts, binaries, lockfiles, secrets, caches, etc.) is included — the goal is a digest with exactly what an agent needs to plan changes, nothing more.
 
 ```bash
-npx gitingest . --exclude-pattern "*.test.js"
-npx gitingest . --include-pattern "src/**"
-npx gitingest . --include-gitignored   # also include .gitignore'd files
+npx gitoutput . --exclude-pattern "*.test.js"
+npx gitoutput . --include-pattern "src/**"
+npx gitoutput . --include-gitignored   # also include .gitignore'd files
 ```
 
 ## Writing to a file instead of stdout
 
 ```bash
-npx gitingest . --output digest.txt
+npx gitoutput . --output digest.txt
 ```
 
 ## All options
@@ -79,7 +79,7 @@ npx gitingest . --output digest.txt
 | `--output <path>`        | `-o`  | Output file path. Defaults to `-` (stdout)                                  |
 
 ```bash
-npx gitingest --help
+npx gitoutput --help
 ```
 
 ## Supported Git hosts
@@ -90,14 +90,14 @@ heuristically when the hostname starts with `git.`, `gitlab.`, or `github.` (e.g
 
 ## Using it as a library
 
-If you're building a Node.js tool on top of gitingest rather than shelling out to the CLI:
+If you're building a Node.js tool on top of gitoutput rather than shelling out to the CLI:
 
 ```bash
-npm install gitingest
+npm install gitoutput
 ```
 
 ```js
-import { ingestAsync } from "gitingest";
+import { ingestAsync } from "gitoutput";
 
 const [summary, tree, content] = await ingestAsync("https://github.com/AnEntrypoint/gitingest");
 
@@ -107,8 +107,8 @@ console.log(summary);
 ## Docker
 
 ```bash
-docker build -t gitingest .
-docker run --rm gitingest https://github.com/AnEntrypoint/gitingest
+docker build -t gitoutput .
+docker run --rm gitoutput https://github.com/AnEntrypoint/gitingest
 ```
 
 ## Contributing

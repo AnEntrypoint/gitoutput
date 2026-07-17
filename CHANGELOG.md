@@ -4,11 +4,15 @@
 
 ### ⚠ BREAKING CHANGES
 
-* **rewrite:** gitingest is now a Node.js CLI tool. The Python implementation (FastAPI
-  web server, self-hosting support, browser extension backend, and the `gitingest`
-  PyPI package) has been fully retired and replaced with a Node.js port distributed
-  via npm. The `gitingest` command prints its digest directly to `STDOUT` by default
-  in one shot; pass `--output/-o <file>` to write to a file instead.
+* **rewrite:** the tool is now a Node.js CLI, published to npm as `gitoutput`. The
+  Python implementation (FastAPI web server, self-hosting support, browser
+  extension backend, and the `gitingest` PyPI package) has been fully retired and
+  replaced with a Node.js port. The `gitoutput` command prints its digest directly
+  to `STDOUT` by default in one shot; pass `--output/-o <file>` to write to a file
+  instead.
+* **package name:** published to npm as `gitoutput`, not `gitingest` -- npm rejected
+  `gitingest` as too similar to an existing unrelated package (`git-ingest`), and
+  `gitmd`/`gitout` were both already taken by unrelated packages.
 
 ### Features
 

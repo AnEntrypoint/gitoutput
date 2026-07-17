@@ -56,8 +56,8 @@ jobs:
         with:
           context: .
           push: false
-          tags: gitingest:ci
+          tags: gitoutput:ci
           load: true
 
       - name: Smoke-test the image
-        run: docker run --rm gitingest:ci https://github.com/octocat/Hello-World
+        run: docker run --rm gitoutput:ci https://github.com/octocat/Hello-World

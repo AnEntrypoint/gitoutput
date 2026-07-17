@@ -51,8 +51,8 @@ contributors.
 7. **Run the CLI** against a real directory or repo to manually verify your changes:
 
     ```bash
-    gitingest .
-    gitingest https://github.com/some/repo
+    node src/cli.js .
+    node src/cli.js https://github.com/some/repo
     ```
 
 8. *(Optional)* **Run `pre-commit` on all files** to check hooks without committing:

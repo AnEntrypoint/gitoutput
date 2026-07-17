@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Command-line interface for gitingest. Mirrors __main__.py. */
+/** Command-line interface for gitoutput. Mirrors __main__.py. */
 
 import { Command } from 'commander';
 
@@ -9,7 +9,7 @@ import { ingestAsync } from './entrypoint.js';
 const program = new Command();
 
 program
-    .name('gitingest')
+    .name('gitoutput')
     .description('Run the CLI entry point to analyze a repo / directory and dump its contents to stdout.')
     .argument('[source]', 'A directory path or a Git repository URL', '.')
     .option('-s, --max-size <bytes>', 'Maximum file size to process in bytes', String(MAX_FILE_SIZE))
@@ -29,24 +29,24 @@ program
         `
 Examples:
   Basic usage (prints the digest to stdout):
-    $ gitingest
-    $ gitingest /path/to/repo
-    $ gitingest https://github.com/user/repo
+    $ gitoutput
+    $ gitoutput /path/to/repo
+    $ gitoutput https://github.com/user/repo
 
   Write to a file instead:
-    $ gitingest -o digest.txt
-    $ gitingest https://github.com/user/repo --output digest.txt
+    $ gitoutput -o digest.txt
+    $ gitoutput https://github.com/user/repo --output digest.txt
 
   With filtering:
-    $ gitingest -i "*.py" -e "*.log"
-    $ gitingest --include-pattern "*.js" --exclude-pattern "node_modules/*"
+    $ gitoutput -i "*.py" -e "*.log"
+    $ gitoutput --include-pattern "*.js" --exclude-pattern "node_modules/*"
 
   Private repositories:
-    $ gitingest https://github.com/user/private-repo -t ghp_token
-    $ GITHUB_TOKEN=ghp_token gitingest https://github.com/user/private-repo
+    $ gitoutput https://github.com/user/private-repo -t ghp_token
+    $ GITHUB_TOKEN=ghp_token gitoutput https://github.com/user/private-repo
 
   Include submodules:
-    $ gitingest https://github.com/user/repo --include-submodules
+    $ gitoutput https://github.com/user/repo --include-submodules
 `,
     )
     .action(async (source, cliOpts) => {

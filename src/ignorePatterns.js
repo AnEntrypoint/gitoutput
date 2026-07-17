@@ -20,6 +20,7 @@ export const DEFAULT_IGNORE_PATTERNS = new Set([
     '.pytype',
     'poetry.lock',
     'Pipfile.lock',
+    'uv.lock',
     // JavaScript/FileSystemNode
     'node_modules',
     'bower_components',
@@ -231,7 +232,22 @@ export const DEFAULT_IGNORE_PATTERNS = new Set([
     '*.map',
     '*.tfstate*',
     'vendor/',
-    // Gitingest
+    // AI agent tooling state/cache (runtime session data, not source)
+    '.gm/',
+    '.claude/',
+    '.wfgy/',
+    '.plugkit-browser-profile/',
+    '.plugkit-browser-profile-*/',
+    '.plugkit-agent-worktree/',
+    '.test-chrome-profile/',
+    '.kilo/',
+    '.agents/',
+    '.codeinsight',
+    '.codeinsight.digest',
+    '.code-search/',
+    '.rs-exec.lock',
+    '.perf-baseline.json',
+    // Gitoutput
     'digest.txt',
 ]);
 
