@@ -141,6 +141,16 @@ export const DEFAULT_IGNORE_PATTERNS = new Set([
     '*.wav',
     '*.flac',
     '*.ogg',
+    // 3D models / game engine assets (binary, not source)
+    '*.glb',
+    '*.gltf',
+    '*.vrm',
+    '*.fbx',
+    '*.blend',
+    '*.usdz',
+    '*.hf',
+    // Compiled binaries
+    '*.wasm',
     // Fonts
     '*.woff',
     '*.woff2',
