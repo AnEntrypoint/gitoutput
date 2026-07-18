@@ -245,6 +245,16 @@ export const DEFAULT_IGNORE_PATTERNS = new Set([
     '*.pth',
     '*.onnx',
     '*.gguf',
+    // ML tokenizer/vocab dumps -- large data files (often tens of thousands
+    // of lines), not planning-relevant source, even though they're JSON/text
+    // and would otherwise pass the binary-content check.
+    'tokenizer.json',
+    'vocab.json',
+    'vocab.txt',
+    'merges.txt',
+    '*-tokenizer.json',
+    '*-vocab.json',
+    'weights/',
     // Database
     '*.db',
     '*.sqlite',
