@@ -255,6 +255,11 @@ export const DEFAULT_IGNORE_PATTERNS = new Set([
     '*-tokenizer.json',
     '*-vocab.json',
     'weights/',
+    // Generated/rendered static-site output and API data snapshots -- e.g. a
+    // docs/api/*.json dump of live GitHub metrics with a "generated"
+    // timestamp field, or docs/*.html pages rendered by a static-site
+    // generator. Not hand-authored planning-relevant docs.
+    'docs/api/',
     // Database
     '*.db',
     '*.sqlite',
