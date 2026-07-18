@@ -2,7 +2,19 @@
 
 ## Unreleased
 
+### Features
+
+* **submodules:** included by default. GitHub submodules are resolved
+  recursively via the zipball fast path (each submodule's pinned commit is
+  looked up through the GitHub Contents API, then fetched as its own
+  zipball) -- no `git submodule` subprocess needed for public github.com
+  repos. Pass `--exclude-submodules` to opt out.
+
 ### ⚠ BREAKING CHANGES
+
+* **cli:** `--include-submodules` is replaced by `--exclude-submodules`.
+  Submodules are now included by default; pass `--exclude-submodules` to
+  restore the old opt-in-only behavior.
 
 * **rewrite:** the tool is now a Node.js CLI, published to npm as `gitoutput`. The
   Python implementation (FastAPI web server, self-hosting support, browser

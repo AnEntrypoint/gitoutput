@@ -22,7 +22,7 @@ import { KNOWN_GIT_HOSTS } from './queryParserUtils.js';
  * @param {string|null} [opts.branch]
  * @param {string|null} [opts.tag]
  * @param {boolean} [opts.includeGitignored]
- * @param {boolean} [opts.includeSubmodules]
+ * @param {boolean} [opts.includeSubmodules] - defaults to true; pass false to exclude submodules
  * @param {string|null} [opts.token]
  * @param {string|null} [opts.output] - "-" for stdout, a file path, or null/undefined to skip writing.
  * @returns {Promise<[string, string, string]>}
@@ -35,7 +35,7 @@ export async function ingestAsync(source, opts = {}) {
         branch = null,
         tag = null,
         includeGitignored = false,
-        includeSubmodules = false,
+        includeSubmodules = true,
         token: tokenArg = null,
         output = null,
     } = opts;

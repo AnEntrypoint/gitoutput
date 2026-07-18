@@ -157,7 +157,7 @@ export class CloneConfig {
         tag = null,
         subpath = '/',
         blob = false,
-        includeSubmodules = false,
+        includeSubmodules = true,
     }) {
         this.url = url;
         this.localPath = localPath;
@@ -190,7 +190,7 @@ export class IngestionQuery {
         maxFileSize = MAX_FILE_SIZE,
         ignorePatterns = new Set(),
         includePatterns = null,
-        includeSubmodules = false,
+        includeSubmodules = true,
     }) {
         this.host = host;
         this.userName = userName;

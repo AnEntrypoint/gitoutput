@@ -36,7 +36,7 @@ npx gitoutput . --branch develop
 ## Requirements
 
 - Node.js 18+ (ships with `npx`)
-- `git` installed and on your `PATH`
+- `git` installed and on your `PATH` — used as a fallback for private repos, non-GitHub hosts, and anything a plain zip download can't express. Public `github.com` repos are fetched directly as a zipball instead, with no `git` subprocess involved.
 - For private repositories: a GitHub Personal Access Token (PAT). [Generate one here](https://github.com/settings/tokens/new?description=gitoutput&scopes=repo).
 
 ## Private repositories
@@ -79,7 +79,7 @@ npx gitoutput . --output digest.txt
 | `--include-pattern <p>`  | `-i`  | Shell-style glob pattern to include (repeatable)                            |
 | `--branch <name>`        | `-b`  | Branch to clone and ingest                                                  |
 | `--include-gitignored`   |       | Include files matched by `.gitignore` / `.gitingestignore`                  |
-| `--include-submodules`   |       | Recursively include Git submodules                                          |
+| `--exclude-submodules`   |       | Exclude Git submodules (recursively included by default)                    |
 | `--token <token>`        | `-t`  | GitHub PAT for private repositories (falls back to `GITHUB_TOKEN` env var)  |
 | `--output <path>`        | `-o`  | Output file path. Defaults to `-` (stdout)                                  |
 

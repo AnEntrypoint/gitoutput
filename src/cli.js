@@ -17,7 +17,7 @@ program
     .option('-i, --include-pattern <pattern...>', 'Shell-style patterns to include.', collectPatterns, [])
     .option('-b, --branch <branch>', 'Branch to clone and ingest')
     .option('--include-gitignored', 'Include files matched by .gitignore and .gitingestignore', false)
-    .option('--include-submodules', "Include repository's submodules in the analysis", false)
+    .option('--exclude-submodules', "Exclude repository's submodules from the analysis (included by default)", false)
     .option(
         '-t, --token <token>',
         'GitHub personal access token (PAT) for accessing private repositories. ' +
@@ -45,8 +45,8 @@ Examples:
     $ gitoutput https://github.com/user/private-repo -t ghp_token
     $ GITHUB_TOKEN=ghp_token gitoutput https://github.com/user/private-repo
 
-  Include submodules:
-    $ gitoutput https://github.com/user/repo --include-submodules
+  Exclude submodules (included by default):
+    $ gitoutput https://github.com/user/repo --exclude-submodules
 `,
     )
     .action(async (source, cliOpts) => {
@@ -59,7 +59,7 @@ Examples:
                 excludePatterns: new Set(cliOpts.excludePattern ?? []),
                 branch: cliOpts.branch ?? null,
                 includeGitignored: Boolean(cliOpts.includeGitignored),
-                includeSubmodules: Boolean(cliOpts.includeSubmodules),
+                includeSubmodules: !cliOpts.excludeSubmodules,
                 token: cliOpts.token ?? null,
                 output: outputTarget,
             });

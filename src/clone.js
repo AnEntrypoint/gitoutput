@@ -26,10 +26,12 @@ export async function cloneRepo(config, token = null) {
 
         await mkdir(path.dirname(localPath), { recursive: true });
 
-        // Fast path: a plain github.com repo (no submodules needed) is lighter fetched
-        // as a zipball -- no git object database, no .git history transfer. Submodules
-        // require real git plumbing, so those always fall through to git clone below.
-        if (isGithubHost(url) && !config.includeSubmodules) {
+        // Fast path: any plain github.com repo is lighter fetched as a zipball -- no git
+        // object database, no .git history transfer. Submodules are resolved recursively
+        // via the GitHub Contents API and their own zipballs, so this also covers repos
+        // with submodules; only genuine zip-unfriendly cases (private-repo git-native
+        // auth, non-GitHub submodule URLs needing full clone, etc.) fall through to git.
+        if (isGithubHost(url)) {
             try {
                 await cloneViaGithubZipball(config, token);
 
@@ -56,7 +58,7 @@ async function cloneViaGithubZipball(config, token) {
 
     const commit = await resolveCommit(config, token);
 
-    await downloadGithubZipball(owner, repo, commit, localPath, token);
+    await downloadGithubZipball(owner, repo, commit, localPath, { token, includeSubmodules: config.includeSubmodules });
 
     if (subpath !== '/') {
         await pruneToSubpath(localPath, config);
