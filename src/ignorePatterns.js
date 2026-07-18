@@ -178,6 +178,8 @@ export const DEFAULT_IGNORE_PATTERNS = new Set([
     '*.ai',
     '*.sketch',
     '*.aep',
+    // App icon binaries
+    '*.icns',
     // Crash/debug dumps
     '*.stackdump',
     '*.dmp',

@@ -40,8 +40,12 @@ export async function readChunk(filePath) {
 export function decodes(chunk, encoding) {
     try {
         if (encoding === 'utf-8' || encoding === 'utf8') {
-            // TextDecoder with fatal:true throws on invalid UTF-8 sequences.
-            new TextDecoder('utf-8', { fatal: true }).decode(chunk);
+            // TextDecoder with fatal:true throws on invalid UTF-8 sequences. `chunk` is a
+            // fixed-size prefix read of the file, so a multi-byte character can be cut off
+            // mid-sequence right at the boundary -- trim any incomplete trailing sequence
+            // before validating, so a truncated (not actually malformed) character doesn't
+            // misclassify a real text file as binary.
+            new TextDecoder('utf-8', { fatal: true }).decode(trimIncompleteUtf8Tail(chunk));
 
             return true;
         }
@@ -64,6 +68,36 @@ export function decodes(chunk, encoding) {
     } catch {
         return false;
     }
+}
+
+/**
+ * Drop a trailing incomplete UTF-8 multi-byte sequence from `chunk`, if any.
+ * @param {Buffer} chunk
+ * @returns {Buffer}
+ */
+function trimIncompleteUtf8Tail(chunk) {
+    const len = chunk.length;
+
+    if (len === 0) {return chunk;}
+
+    // Scan back at most 3 bytes (the longest a UTF-8 sequence can trail by) looking
+    // for the lead byte of a multi-byte sequence that the chunk cuts off before its
+    // full length.
+    for (let back = 1; back <= 3 && back <= len; back++) {
+        const byte = chunk[len - back];
+
+        if ((byte & 0xc0) === 0x80) {continue;} // continuation byte, keep scanning back
+
+        const seqLen = byte >= 0xf0 ? 4 : byte >= 0xe0 ? 3 : byte >= 0xc0 ? 2 : 1;
+
+        if (seqLen > back) {
+            return chunk.subarray(0, len - back);
+        }
+
+        break;
+    }
+
+    return chunk;
 }
 
 export function getPreferredEncodings() {
