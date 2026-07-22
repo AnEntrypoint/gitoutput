@@ -23,19 +23,26 @@ program
         'GitHub personal access token (PAT) for accessing private repositories. ' +
       'If omitted, the CLI will look for the GITHUB_TOKEN environment variable.',
     )
-    .option('-o, --output <path>', "Output file path. Defaults to '-' (stdout). Pass a file path to write to a file instead.", '-')
+    .option(
+        '-o, --output <path>',
+        "Output file base path. Written as chunked files named '<base>-<n>.<ext>' (80k chars per chunk). " +
+      "Defaults to '<gitprojectname>-<n>.txt'. Pass '-' to print a single digest to stdout instead.",
+    )
     .addHelpText(
         'after',
         `
 Examples:
-  Basic usage (prints the digest to stdout):
+  Basic usage (writes chunked files, e.g. gitoutput-1.txt, gitoutput-2.txt, ...):
     $ gitoutput
     $ gitoutput /path/to/repo
     $ gitoutput https://github.com/user/repo
 
-  Write to a file instead:
+  Choose a base output name (writes digest-1.txt, digest-2.txt, ...):
     $ gitoutput -o digest.txt
     $ gitoutput https://github.com/user/repo --output digest.txt
+
+  Print a single digest to stdout instead:
+    $ gitoutput -o -
 
   With filtering:
     $ gitoutput -i "*.py" -e "*.log"
@@ -50,7 +57,7 @@ Examples:
 `,
     )
     .action(async (source, cliOpts) => {
-        const outputTarget = cliOpts.output ?? '-';
+        const outputTarget = cliOpts.output ?? null;
 
         try {
             await ingestAsync(source, {
@@ -71,7 +78,7 @@ Examples:
         }
 
         if (outputTarget !== '-') {
-            process.stdout.write(`Analysis complete! Output written to: ${outputTarget}\n`);
+            process.stdout.write('Analysis complete! Output written to chunked file(s).\n');
         }
     });
 

@@ -64,10 +64,17 @@ npx gitoutput . --include-pattern "src/**"
 npx gitoutput . --include-gitignored   # also include .gitignore'd files
 ```
 
-## Writing to a file instead of stdout
+## Output
+
+By default, gitoutput writes chunked files instead of printing to stdout: `<gitprojectname>-1.txt`,
+`<gitprojectname>-2.txt`, etc., each at most 80,000 characters. Chunk 1 contains the summary and an
+[mcp-thorns](https://www.npmjs.com/package/mcp-thorns) codebase report; later chunks contain the
+directory tree and file contents.
 
 ```bash
-npx gitoutput . --output digest.txt
+npx gitoutput .                       # writes gitoutput-1.txt, gitoutput-2.txt, ...
+npx gitoutput . --output digest.txt   # writes digest-1.txt, digest-2.txt, ...
+npx gitoutput . --output -            # print a single digest to stdout instead
 ```
 
 ## All options
@@ -81,7 +88,7 @@ npx gitoutput . --output digest.txt
 | `--include-gitignored`   |       | Include files matched by `.gitignore` / `.gitingestignore`                  |
 | `--exclude-submodules`   |       | Exclude Git submodules (recursively included by default)                    |
 | `--token <token>`        | `-t`  | GitHub PAT for private repositories (falls back to `GITHUB_TOKEN` env var)  |
-| `--output <path>`        | `-o`  | Output file path. Defaults to `-` (stdout)                                  |
+| `--output <path>`        | `-o`  | Output file base name for chunked files. Defaults to `<gitprojectname>.txt`. Pass `-` for stdout |
 
 ```bash
 npx gitoutput --help

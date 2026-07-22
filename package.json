@@ -30,7 +30,8 @@
     "commander": "^15.0.0",
     "iconv-lite": "^0.7.3",
     "ignore": "^7.0.6",
-    "js-tiktoken": "^1.0.21"
+    "js-tiktoken": "^1.0.21",
+    "mcp-thorns": "^5.1.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

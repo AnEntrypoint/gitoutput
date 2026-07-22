@@ -3,9 +3,11 @@
 import { rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
+import { analyze } from 'mcp-thorns';
+
 import { resolveToken } from './auth.js';
 import { cloneRepo } from './clone.js';
-import { MAX_FILE_SIZE } from './config.js';
+import { MAX_FILE_SIZE, OUTPUT_CHUNK_SIZE } from './config.js';
 import { loadIgnorePatterns } from './ignorePatterns.js';
 import { ingestQuery } from './ingestion.js';
 import { processPatterns } from './patternUtils.js';
@@ -24,7 +26,9 @@ import { KNOWN_GIT_HOSTS } from './queryParserUtils.js';
  * @param {boolean} [opts.includeGitignored]
  * @param {boolean} [opts.includeSubmodules] - defaults to true; pass false to exclude submodules
  * @param {string|null} [opts.token]
- * @param {string|null} [opts.output] - "-" for stdout, a file path, or null/undefined to skip writing.
+ * @param {string|null} [opts.output] - "-" for stdout; a file path or null/undefined writes chunked
+ *   files of at most OUTPUT_CHUNK_SIZE characters each, named "<base>-<n><ext>". Chunk 1 holds the
+ *   summary plus an mcp-thorns codebase report; later chunks hold the directory tree and file contents.
  * @returns {Promise<[string, string, string]>}
  */
 export async function ingestAsync(source, opts = {}) {
@@ -90,8 +94,9 @@ export async function ingestAsync(source, opts = {}) {
         }
 
         const [summary, tree, content] = await ingestQuery(query);
+        const thornsReport = analyzeWithThorns(query.localPath);
 
-        await writeOutput(summary, tree, content, output);
+        await writeOutput({ summary, tree, content, thornsReport, query, target: output });
 
         return [summary, tree, content];
     } finally {
@@ -130,16 +135,56 @@ async function applyGitignores(query) {
     }
 }
 
-async function writeOutput(summary, tree, content, target) {
-    const data = `${summary}\n${tree}\n${content}`;
+function analyzeWithThorns(localPath) {
+    try {
+        return analyze(localPath);
+    } catch (exc) {
+        return `mcp-thorns analysis failed: ${exc.message}`;
+    }
+}
 
+async function writeOutput({ summary, tree, content, thornsReport, query, target }) {
     if (target === '-') {
+        const data = `${summary}\n${tree}\n${content}`;
+
         await new Promise((resolve, reject) => {
             process.stdout.write(data, (err) => (err ? reject(err) : resolve()));
         });
-    } else if (target != null) {
-        await writeFile(target, data, 'utf-8');
+
+        return;
     }
+
+    const basePath = target != null ? target : defaultOutputBasePath(query);
+    const firstChunk = `${summary}\n\n${thornsReport}`;
+    const rest = `${tree}\n${content}`;
+    const chunks = [firstChunk, ...splitIntoChunks(rest, OUTPUT_CHUNK_SIZE)];
+
+    await Promise.all(chunks.map((chunk, i) => writeFile(chunkPath(basePath, i + 1), chunk, 'utf-8')));
+}
+
+function defaultOutputBasePath(query) {
+    const rawName = query.repoName ?? query.slug ?? 'gitoutput';
+    const safeName = rawName.replace(/[^a-zA-Z0-9._-]+/g, '-');
+
+    return `${safeName}.txt`;
+}
+
+function chunkPath(basePath, chunkNum) {
+    const { dir, name, ext } = path.parse(basePath);
+
+    return path.join(dir, `${name}-${chunkNum}${ext}`);
+}
+
+function splitIntoChunks(text, size) {
+    if (text.length === 0) {return [];}
+
+    const chunks = [];
+
+    for (let i = 0; i < text.length; i += size) {
+        chunks.push(text.slice(i, i + size));
+    }
+
+    return chunks;
 }
 
 function removeSuffix(s, suffix) {
