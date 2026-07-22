@@ -24,7 +24,10 @@ COPY --from=builder --chown=node:node /build/node_modules ./node_modules
 COPY --chown=node:node package.json ./
 COPY --chown=node:node src/ ./src/
 
-USER node
+RUN mkdir -p /home/node/output && chown node:node /home/node/output
 
-ENTRYPOINT ["node", "src/cli.js"]
+USER node
+WORKDIR /home/node/output
+
+ENTRYPOINT ["node", "/app/src/cli.js"]
 CMD ["--help"]

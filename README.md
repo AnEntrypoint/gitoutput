@@ -4,12 +4,12 @@
 <!-- markdownlint-disable MD033 -->
 <p align="center">
   <a href="https://www.npmjs.com/package/gitoutput"><img src="https://img.shields.io/npm/v/gitoutput.svg" alt="npm"></a>
-  <a href="https://github.com/AnEntrypoint/gitingest/actions/workflows/ci.yml?query=branch%3Amain"><img src="https://github.com/AnEntrypoint/gitingest/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="https://github.com/AnEntrypoint/gitingest/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AnEntrypoint/gitingest.svg" alt="License"></a>
+  <a href="https://github.com/AnEntrypoint/gitoutput/actions/workflows/ci.yml?query=branch%3Amain"><img src="https://github.com/AnEntrypoint/gitoutput/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://github.com/AnEntrypoint/gitoutput/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AnEntrypoint/gitoutput.svg" alt="License"></a>
 </p>
 <!-- markdownlint-enable MD033 -->
 
-Turn any Git repository or local directory into a single, prompt-friendly text digest for LLMs — no install required, straight from `npx`.
+Turn any Git repository or local directory into a prompt-friendly text digest for LLMs — no install required, straight from `npx`.
 
 ## Quick start
 
@@ -18,18 +18,18 @@ npx gitoutput /path/to/directory
 ```
 
 ```bash
-npx gitoutput https://github.com/AnEntrypoint/gitingest
+npx gitoutput https://github.com/AnEntrypoint/gitoutput
 ```
 
-That's it — the digest (a summary, a file tree, and the content of every included file) prints straight to your terminal in one shot. `npx` fetches the latest published version each time, so there's nothing to install or keep up to date.
+That's it — gitoutput writes a chunked digest (summary + mcp-thorns report in chunk 1, directory tree and file contents split across the rest) to `<gitprojectname>-1.txt`, `-2.txt`, etc. in the current directory. `npx` fetches the latest published version each time, so there's nothing to install or keep up to date.
 
 ```bash
-# Pipe it wherever you need it
-npx gitoutput . | pbcopy
-npx gitoutput . > digest.txt
+# Print a single digest to stdout instead of writing files
+npx gitoutput . --output -
+npx gitoutput . --output - | pbcopy
 
 # Point it at a subdirectory or branch
-npx gitoutput https://github.com/AnEntrypoint/gitingest/tree/main/src
+npx gitoutput https://github.com/AnEntrypoint/gitoutput/tree/main/src
 npx gitoutput . --branch develop
 ```
 
@@ -111,7 +111,7 @@ npm install gitoutput
 ```js
 import { ingestAsync } from "gitoutput";
 
-const [summary, tree, content] = await ingestAsync("https://github.com/AnEntrypoint/gitingest");
+const [summary, tree, content] = await ingestAsync("https://github.com/AnEntrypoint/gitoutput");
 
 console.log(summary);
 ```
@@ -120,7 +120,7 @@ console.log(summary);
 
 ```bash
 docker build -t gitoutput .
-docker run --rm gitoutput https://github.com/AnEntrypoint/gitingest
+docker run --rm gitoutput https://github.com/AnEntrypoint/gitoutput
 ```
 
 ## Contributing

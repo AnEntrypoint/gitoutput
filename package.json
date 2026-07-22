@@ -20,11 +20,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AnEntrypoint/gitingest.git"
+    "url": "git+https://github.com/AnEntrypoint/gitoutput.git"
   },
-  "homepage": "https://github.com/AnEntrypoint/gitingest",
+  "homepage": "https://github.com/AnEntrypoint/gitoutput",
   "bugs": {
-    "url": "https://github.com/AnEntrypoint/gitingest/issues"
+    "url": "https://github.com/AnEntrypoint/gitoutput/issues"
   },
   "dependencies": {
     "commander": "^15.0.0",
