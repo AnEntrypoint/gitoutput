@@ -1,6 +1,6 @@
 {
   "name": "gitoutput",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "description": "CLI tool to turn a Git repository or local directory into a single text digest for LLMs",
   "type": "module",
   "main": "src/index.js",
